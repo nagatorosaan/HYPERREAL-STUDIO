@@ -66,13 +66,13 @@ function App() {
       setSelectedImage(newImage); // Auto select new image
     } catch (err: any) {
       console.error("Failed to generate image", err);
-      let errorMessage = "Connection failed. Please check your internet.";
+      let errorMessage = "Falha na conexão. Verifique sua internet.";
       
       const errString = err.toString();
       const message = err.message || "";
 
       if (message === "API_KEY_MISSING" || errString.includes("API Key") || errString.includes("403")) {
-        errorMessage = "System Error: API Configuration Missing. In Vercel, go to Settings > Environment Variables and add 'API_KEY'.";
+        errorMessage = "Erro de Sistema: Configuração de API ausente. No Vercel, vá em Settings > Environment Variables e adicione 'API_KEY'.";
       } else if (message) {
         errorMessage = message;
       }
@@ -99,7 +99,7 @@ function App() {
              <div className={`flex items-center gap-2 px-3 py-1 rounded-full border transition-colors ${error ? 'bg-red-500/10 border-red-500/20' : 'bg-white/5 border-white/10'}`}>
                 <div className={`w-2 h-2 rounded-full ${error ? 'bg-red-500 animate-pulse' : 'bg-green-500 animate-pulse'}`}></div>
                 <span className={`text-xs font-mono ${error ? 'text-red-400' : 'text-gray-400'}`}>
-                  {error ? 'SYSTEM OFF-LINE' : 'SYSTEM ONLINE'}
+                  {error ? 'SISTEMA OFFLINE' : 'SISTEMA ONLINE'}
                 </span>
              </div>
           </div>
@@ -114,11 +114,11 @@ function App() {
           {/* Prompt Section */}
           <div className="bg-hyper-surface border border-white/5 rounded-xl p-6 shadow-xl relative overflow-hidden group">
             <div className="absolute inset-0 bg-gradient-to-br from-hyper-purple/5 to-transparent pointer-events-none group-hover:from-hyper-purple/10 transition-all"></div>
-            <label className="block text-sm font-medium text-hyper-glow mb-2 uppercase tracking-wider">Prompt Interface</label>
+            <label className="block text-sm font-medium text-hyper-glow mb-2 uppercase tracking-wider">Interface de Comando</label>
             <textarea
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              placeholder="Describe your vision in extreme detail..."
+              placeholder="Descreva sua visão com detalhes extremos..."
               className="w-full bg-black/50 border border-white/10 rounded-lg p-4 h-40 text-sm focus:outline-none focus:border-hyper-purple focus:ring-1 focus:ring-hyper-purple transition-all resize-none placeholder-gray-600"
             />
           </div>
@@ -126,7 +126,7 @@ function App() {
           {/* Reference Images */}
           <div className="bg-hyper-surface border border-white/5 rounded-xl p-6 shadow-xl">
              <div className="flex justify-between items-center mb-4">
-                <label className="text-sm font-medium text-hyper-glow uppercase tracking-wider">Reference Inputs</label>
+                <label className="text-sm font-medium text-hyper-glow uppercase tracking-wider">Referências Visuais</label>
                 <button 
                   onClick={() => fileInputRef.current?.click()}
                   className="text-xs flex items-center gap-1 text-gray-400 hover:text-white transition-colors"
@@ -147,7 +147,7 @@ function App() {
                  onClick={() => fileInputRef.current?.click()}
                  className="h-24 border-2 border-dashed border-white/10 rounded-lg flex items-center justify-center cursor-pointer hover:border-hyper-purple/50 hover:bg-hyper-purple/5 transition-all"
                >
-                 <span className="text-xs text-gray-500">Drop images here or click to upload</span>
+                 <span className="text-xs text-gray-500">Arraste imagens ou clique aqui</span>
                </div>
              ) : (
                <div className="grid grid-cols-3 gap-2">
@@ -175,7 +175,7 @@ function App() {
           {/* Settings */}
           <div className="bg-hyper-surface border border-white/5 rounded-xl p-6 shadow-xl grid grid-cols-2 gap-4">
             <div className="col-span-2">
-              <label className="block text-xs text-gray-500 uppercase mb-1">Style Engine</label>
+              <label className="block text-xs text-gray-500 uppercase mb-1">Estilo Visual</label>
               <select 
                 value={settings.style}
                 onChange={(e) => setSettings({...settings, style: e.target.value as any})}
@@ -187,29 +187,29 @@ function App() {
               </select>
             </div>
             <div>
-              <label className="block text-xs text-gray-500 uppercase mb-1">Resolution</label>
+              <label className="block text-xs text-gray-500 uppercase mb-1">Resolução</label>
               <select 
                 value={settings.imageSize}
                 onChange={(e) => setSettings({...settings, imageSize: e.target.value as any})}
                 className="w-full bg-black/50 border border-white/10 rounded-lg p-2 text-sm text-gray-300 focus:border-hyper-purple outline-none"
               >
-                <option value="1K">1K (Fast)</option>
-                <option value="2K">2K (High)</option>
+                <option value="1K">1K (Rápido)</option>
+                <option value="2K">2K (Alto)</option>
                 <option value="4K">4K (Ultra)</option>
               </select>
             </div>
             <div>
-              <label className="block text-xs text-gray-500 uppercase mb-1">Aspect Ratio</label>
+              <label className="block text-xs text-gray-500 uppercase mb-1">Proporção</label>
               <select 
                 value={settings.aspectRatio}
                 onChange={(e) => setSettings({...settings, aspectRatio: e.target.value as any})}
                 className="w-full bg-black/50 border border-white/10 rounded-lg p-2 text-sm text-gray-300 focus:border-hyper-purple outline-none"
               >
-                <option value="1:1">1:1 Square</option>
-                <option value="16:9">16:9 Landscape</option>
-                <option value="9:16">9:16 Portrait</option>
-                <option value="3:4">3:4 Vertical</option>
-                <option value="4:3">4:3 Standard</option>
+                <option value="1:1">1:1 Quadrado</option>
+                <option value="16:9">16:9 Cinema</option>
+                <option value="9:16">9:16 Vertical</option>
+                <option value="3:4">3:4 Retrato</option>
+                <option value="4:3">4:3 Padrão</option>
               </select>
             </div>
           </div>
@@ -227,12 +227,12 @@ function App() {
             {loading ? (
               <>
                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                PROCESSING...
+                PROCESSANDO...
               </>
             ) : (
               <>
                 <SparklesIcon className="w-5 h-5" />
-                INITIATE RENDER
+                INICIAR GERAÇÃO
               </>
             )}
           </button>
@@ -278,7 +278,7 @@ function App() {
                           <span className="text-3xl">!</span>
                        </div>
                        <div>
-                         <h3 className="font-display text-lg tracking-widest mb-1">GENERATION FAILED</h3>
+                         <h3 className="font-display text-lg tracking-widest mb-1">FALHA NA GERAÇÃO</h3>
                          <p className="text-sm font-mono max-w-md mx-auto">{error}</p>
                        </div>
                     </div>
@@ -287,7 +287,7 @@ function App() {
                       <div className="w-24 h-24 rounded-full bg-white/5 mx-auto flex items-center justify-center animate-pulse">
                           <SparklesIcon className="w-10 h-10 text-hyper-purple" />
                       </div>
-                      <p className="font-display tracking-widest text-gray-500">AWAITING INPUT DATA</p>
+                      <p className="font-display tracking-widest text-gray-500">AGUARDANDO DADOS DE ENTRADA</p>
                     </>
                  )}
               </div>
@@ -298,7 +298,7 @@ function App() {
                  <div className="w-64 h-2 bg-gray-800 rounded-full overflow-hidden">
                     <div className="h-full bg-hyper-purple animate-[loading_1.5s_ease-in-out_infinite] w-1/2"></div>
                  </div>
-                 <p className="mt-4 font-mono text-hyper-glow animate-pulse">RENDERING ASSETS...</p>
+                 <p className="mt-4 font-mono text-hyper-glow animate-pulse">RENDERIZANDO ASSETS...</p>
                  <style>{`
                    @keyframes loading {
                      0% { transform: translateX(-100%); }
@@ -314,7 +314,7 @@ function App() {
              <div className="flex gap-4 h-full">
                 {generatedImages.length === 0 ? (
                   <div className="flex items-center justify-center w-full text-gray-600 text-sm gap-2">
-                    <HistoryIcon className="w-4 h-4" /> NO HISTORY
+                    <HistoryIcon className="w-4 h-4" /> SEM HISTÓRICO
                   </div>
                 ) : (
                   generatedImages.map((img) => (

@@ -12,6 +12,13 @@ const getApiKey = (): string => {
   } catch (e) {
     console.warn("Error accessing process.env:", e);
   }
+  
+  if (!apiKey) {
+      console.log("HyperReal Studio: No API Key found in process.env.API_KEY");
+  } else {
+      console.log("HyperReal Studio: API Key detected.");
+  }
+
   return apiKey;
 };
 
