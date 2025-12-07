@@ -67,8 +67,15 @@ function App() {
     } catch (err: any) {
       console.error("Failed to generate image", err);
       let errorMessage = "Connection failed. Please check your internet.";
-      if (err.message) errorMessage = err.message;
-      if (err.toString().includes("API Key")) errorMessage = "System Error: API Configuration Missing.";
+      
+      const errString = err.toString();
+      const message = err.message || "";
+
+      if (message === "API_KEY_MISSING" || errString.includes("API Key") || errString.includes("403")) {
+        errorMessage = "System Error: API Configuration Missing. In Vercel, go to Settings > Environment Variables and add 'API_KEY'.";
+      } else if (message) {
+        errorMessage = message;
+      }
       
       setError(errorMessage);
     } finally {

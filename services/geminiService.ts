@@ -1,13 +1,18 @@
 import { GoogleGenAI } from "@google/genai";
 import { GenerationSettings, ReferenceImage } from "../types";
 
-// Helper to create the AI instance with the current key
-const getAiInstance = () => {
-  const apiKey = process.env.API_KEY;
-  if (!apiKey) {
-    throw new Error("API Key not found in environment.");
+// Helper to safely access the API Key
+const getApiKey = (): string => {
+  let apiKey = '';
+  try {
+    // Check if process and process.env exist (Node/Bundler environment)
+    if (typeof process !== 'undefined' && process.env) {
+      apiKey = process.env.API_KEY || '';
+    }
+  } catch (e) {
+    console.warn("Error accessing process.env:", e);
   }
-  return new GoogleGenAI({ apiKey });
+  return apiKey;
 };
 
 export const generateImage = async (
@@ -15,7 +20,13 @@ export const generateImage = async (
   referenceImages: ReferenceImage[],
   settings: GenerationSettings
 ): Promise<string> => {
-  const ai = getAiInstance();
+  const apiKey = getApiKey();
+  
+  if (!apiKey) {
+    throw new Error("API_KEY_MISSING");
+  }
+
+  const ai = new GoogleGenAI({ apiKey });
 
   // Enhance prompt based on style
   let finalPrompt = prompt;
@@ -42,21 +53,20 @@ export const generateImage = async (
   parts.push({ text: finalPrompt });
 
   try {
+    // Using gemini-2.5-flash-image for high performance and fewer restrictions
     const response = await ai.models.generateContent({
-      model: 'gemini-3-pro-image-preview',
+      model: 'gemini-2.5-flash-image',
       contents: {
         parts: parts
       },
       config: {
         imageConfig: {
           aspectRatio: settings.aspectRatio,
-          imageSize: settings.imageSize 
         }
       }
     });
 
     // Extract image
-    // The model can return multiple parts, find the inlineData (image)
     const candidates = response.candidates;
     if (candidates && candidates.length > 0 && candidates[0].content && candidates[0].content.parts) {
       for (const part of candidates[0].content.parts) {
@@ -68,7 +78,7 @@ export const generateImage = async (
 
     throw new Error("No image data found in response");
   } catch (error) {
-    console.error("Generation error:", error);
+    console.error("Generation error details:", error);
     throw error;
   }
 };
